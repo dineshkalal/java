@@ -1,0 +1,107 @@
+// Student Model
+package com.example.demo.models;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Student {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+	private String name;
+	private int marks;
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public Integer getMarks() {
+		return marks;
+	}
+	
+	public void setMarks(int marks) {
+		this.marks = marks;
+	}
+
+}
+
+
+// Repository
+package com.example.demo.repository;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import com.example.demo.models.Student;
+
+@Repository
+public interface StudentRepository extends CrudRepository<Student, Integer> {
+	
+
+}
+
+// StudentController
+package com.example.demo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.models.Student;
+import com.example.demo.repository.StudentRepository;
+
+@RestController
+public class StudentController {
+	@Autowired
+	StudentRepository students;
+	@PostMapping("students/add")
+	public String addStudent(Student student)
+	{
+		try
+		{			
+			students.save(student);
+			return "Record Added into Database";
+		}
+		catch (Exception ex)
+		{
+			return ex.getMessage();			
+		}
+	}
+	
+	
+
+}
+
+// application.property
+spring.application.name=DBDemo
+spring.datasource.url=jdbc:mysql://localhost:3306/dkdb
+spring.datasource.username=root
+spring.datasource.password=root@123
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.hibernate.ddl-auto=create
+
+//new.html
+<html>
+	<body>
+		<form action="/students/add" method="post">
+		<p>	Name:<input type="text" name="name">
+		<p>	Marks:<input type="text" name="marks">
+		<p>	<button type="submit">Add Record</button>
+		</form>
+	</body>
+</html>	
