@@ -82,7 +82,7 @@ public class StudentController {
 			return ex.getMessage();			
 		}
 	}
-	
+	// Display Data in JSon Format
 	@GetMapping("/students")
     public Iterable<Student> getAllStudent() {
         return students.findAll();
